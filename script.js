@@ -51,7 +51,20 @@ const game = (function() {
 const display = (function() {
     const boardEl = document.querySelector('.board')
     const messageEl = document.querySelector('.message')
-    messageEl.innerText = `${game.getCurrentPlayer()}'s turn!`
+    const xPlayerNameEl = document.querySelector('#xPlayerName')
+    const oPlayerNameEl = document.querySelector('#oPlayerName')
+
+    const displayPlayerName = player => {
+        const cur = player ? player : game.getCurrentPlayer()
+        if (cur === 'X') {
+            return xPlayerNameEl.value ? xPlayerNameEl.value : cur
+        }
+        if (cur === 'O') {
+            return oPlayerNameEl.value ? oPlayerNameEl.value : cur
+        }
+    }
+
+    messageEl.innerText = `${displayPlayerName()}'s turn!`
 
     let exit = false
 
@@ -59,6 +72,7 @@ const display = (function() {
         const squareEl = document.createElement('button')
         squareEl.classList.add('square')
         squareEl.addEventListener('click', () => {
+            console.log(oPlayerNameEl.value)
             if (exit) return
             if (squareEl.innerText) return
 
@@ -68,10 +82,10 @@ const display = (function() {
             const winner = calculateWinner(board.state)
 
             if (winner) {
-                messageEl.innerText = `Game Over. ${winner} wins!`
+                messageEl.innerText = `Game Over. ${displayPlayerName(winner)} wins!`
                 exit = true
             } else {
-                messageEl.innerText = `${game.getCurrentPlayer()}'s turn!`
+                messageEl.innerText = `${displayPlayerName()}'s turn!`
             }
         })
         boardEl.append(squareEl)

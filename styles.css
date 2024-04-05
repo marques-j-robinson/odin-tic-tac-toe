@@ -3,6 +3,22 @@
     padding: 0;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game {
+    display: flex;
+    margin: 20px 0;
+}
+
+.message {
+    font-size: 18px;
+    margin-left: 20px;
+}
+
 .board {
     display: grid;
     grid-template-rows: 50px 50px 50px;
@@ -17,4 +33,9 @@
     border: 1px solid black;
     font-size: 28px;
     cursor: pointer;
+}
+
+.players {
+    display: flex;
+    flex-direction: column;
 }
