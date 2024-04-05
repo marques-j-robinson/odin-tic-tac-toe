@@ -61,3 +61,12 @@ while (!calculateWinner(board.get())) {
 }
 
 console.log(`${calculateWinner(board.get())} Wins!`)
+
+const display = (function() {
+    const boardEl = document.querySelector('.board')
+    board.get().forEach((val, key) => {
+        const squareEl = document.createElement('button')
+        squareEl.classList.add('square')
+        boardEl.append(squareEl)
+    })
+})()
