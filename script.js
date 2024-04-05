@@ -24,10 +24,6 @@ function calculateWinner(squares) {
 const board = (function() {
     const state = Array(9).fill(null)
 
-    const get = () => {
-        console.log(state)
-        return state
-    }
     const move = (boardId, player) => {
         if (boardId < 0) return
         if (boardId > state.length-1) return
@@ -35,7 +31,7 @@ const board = (function() {
         state[boardId] = player
     }
 
-    return { get, move }
+    return { state, move }
 })()
 
 const game = (function() {
@@ -44,7 +40,6 @@ const game = (function() {
 
     const play = boardId => {
         board.move(boardId, players[cur])
-        board.get()
         cur = cur === 1 ? 0 : 1
     }
 
@@ -53,20 +48,41 @@ const game = (function() {
     return { play, getCurrentPlayer }
 })()
 
-const moves = [0, 3, 1, 4, 2]
-let moveId = 0
-while (!calculateWinner(board.get())) {
-    game.play(moves[moveId])
-    ++moveId
-}
-
-console.log(`${calculateWinner(board.get())} Wins!`)
-
 const display = (function() {
     const boardEl = document.querySelector('.board')
-    board.get().forEach((val, key) => {
+    const messageEl = document.querySelector('.message')
+    messageEl.innerText = `${game.getCurrentPlayer()}'s turn!`
+
+    let exit = false
+
+    board.state.forEach((val, boardId) => {
         const squareEl = document.createElement('button')
         squareEl.classList.add('square')
+        squareEl.addEventListener('click', () => {
+            if (exit) return
+            if (squareEl.innerText) return
+
+            squareEl.innerText = game.getCurrentPlayer()
+            game.play(boardId)
+
+            const winner = calculateWinner(board.state)
+
+            if (winner) {
+                messageEl.innerText = `Game Over. ${winner} wins!`
+                exit = true
+            } else {
+                messageEl.innerText = `${game.getCurrentPlayer()}'s turn!`
+            }
+        })
         boardEl.append(squareEl)
     })
 })()
+
+//const moves = [0, 3, 1, 4, 2]
+//let moveId = 0
+//while (!calculateWinner(board.get())) {
+    //game.play(moves[moveId])
+    //++moveId
+//}
+
+//console.log(`${calculateWinner(board.get())} Wins!`)
