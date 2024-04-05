@@ -77,12 +77,3 @@ const display = (function() {
         boardEl.append(squareEl)
     })
 })()
-
-//const moves = [0, 3, 1, 4, 2]
-//let moveId = 0
-//while (!calculateWinner(board.get())) {
-    //game.play(moves[moveId])
-    //++moveId
-//}
-
-//console.log(`${calculateWinner(board.get())} Wins!`)
