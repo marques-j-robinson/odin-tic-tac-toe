@@ -53,10 +53,11 @@ const game = (function() {
     return { play, getCurrentPlayer }
 })()
 
+const moves = [0, 3, 1, 4, 2]
+let moveId = 0
 while (!calculateWinner(board.get())) {
-    const currentPlayer = game.getCurrentPlayer()
-    const playerSelection = prompt(`Player ${currentPlayer}, please select board position... Any number between 0 and 8!`)
-    game.play(playerSelection)
+    game.play(moves[moveId])
+    ++moveId
 }
 
 console.log(`${calculateWinner(board.get())} Wins!`)
