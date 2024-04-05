@@ -22,7 +22,14 @@ function calculateWinner(squares) {
 }
 
 const board = (function() {
-    const state = Array(9).fill(null)
+    let state = Array(9).fill(null)
+
+    const get = shouldReset => {
+        if (shouldReset) {
+            state = Array(9).fill(null)
+        }
+        return state
+    }
 
     const move = (boardId, player) => {
         if (boardId < 0) return
@@ -31,7 +38,7 @@ const board = (function() {
         state[boardId] = player
     }
 
-    return { state, move }
+    return { get, move }
 })()
 
 const game = (function() {
@@ -45,7 +52,9 @@ const game = (function() {
 
     const getCurrentPlayer = () => players[cur]
 
-    return { play, getCurrentPlayer }
+    const reset = () => cur = 0
+
+    return { play, getCurrentPlayer, reset }
 })()
 
 const display = (function() {
@@ -68,26 +77,40 @@ const display = (function() {
 
     let exit = false
 
-    board.state.forEach((val, boardId) => {
-        const squareEl = document.createElement('button')
-        squareEl.classList.add('square')
-        squareEl.addEventListener('click', () => {
-            console.log(oPlayerNameEl.value)
-            if (exit) return
-            if (squareEl.innerText) return
+    const displayInitGameBoard = () => {
+        board.get().forEach((val, boardId) => {
+            const squareEl = document.createElement('button')
+            squareEl.classList.add('square')
+            squareEl.addEventListener('click', () => {
+                if (exit) return
+                if (squareEl.innerText) return
 
-            squareEl.innerText = game.getCurrentPlayer()
-            game.play(boardId)
+                squareEl.innerText = game.getCurrentPlayer()
+                game.play(boardId)
 
-            const winner = calculateWinner(board.state)
+                const winner = calculateWinner(board.get())
 
-            if (winner) {
-                messageEl.innerText = `Game Over. ${displayPlayerName(winner)} wins!`
-                exit = true
-            } else {
-                messageEl.innerText = `${displayPlayerName()}'s turn!`
-            }
+                if (winner) {
+                    messageEl.innerText = `Game Over. ${displayPlayerName(winner)} wins!`
+                    exit = true
+                } else {
+                    messageEl.innerText = `${displayPlayerName()}'s turn!`
+                }
+            })
+            boardEl.append(squareEl)
         })
-        boardEl.append(squareEl)
+    }
+    displayInitGameBoard()
+
+    const newGameBtn = document.querySelector('.newgame')
+
+    newGameBtn.addEventListener('click', () => {
+        const shouldReset = true
+        board.get(shouldReset)
+        game.reset()
+        messageEl.innerText = `${displayPlayerName()}'s turn!`
+        exit = false
+        boardEl.innerText = ''
+        displayInitGameBoard()
     })
 })()
